@@ -67,8 +67,7 @@ if [ $ZNTIER == -BAMF ] ; then
 fi
 
 ZNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
-ZNLISTCMD="`echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'${ZNTIER}'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" 
-"+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
+ZNLISTCMD="`echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'${ZNTIER}'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
 
 
 SORTED_ZN_LIST=$(echo "$ZNLISTCMD" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
