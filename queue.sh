@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ZNTIER=$1
+ZNADDR=$2
+
 function _cache_command(){
 
     # cache life in minutes
@@ -23,8 +26,6 @@ function _cache_command(){
     echo "$CONTENTS"
 }
 
-ZNTIER=$1
-ZNADDR=$2
 
 GREEN='\033[1;32m'
 
