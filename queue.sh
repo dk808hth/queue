@@ -7,30 +7,6 @@ ZNLISTFULL="printf "%s" "$ZNLISTCMD"
 ZNTIER=$1
 ZNADDR=$2
 
-function _cache_command(){
-
-    # cache life in minutes
-    AGE=2
-
-    FILE=$1
-    AGE=$2
-    CMD=$3
-
-    OLD=0
-    CONTENTS=""
-    if [ -e $FILE ]; then
-        OLD=$(find $FILE -mmin +$AGE -ls | wc -l)
-        CONTENTS=$(cat $FILE);
-    fi
-    if [ -z "$CONTENTS" ] || [ "$OLD" -gt 0 ]; then
-        echo "REBUILD"
-        CONTENTS=$(eval $CMD)
-        echo "$CONTENTS" > $FILE
-    fi
-    echo "$CONTENTS"
-}
-
-
 GREEN='\033[1;32m'
 
 echo '                                                                      '
@@ -95,6 +71,30 @@ if [ $ZNTIER == -BAMF ] ; then
 fi
 
 
+function _cache_command(){
+
+    # cache life in minutes
+    AGE=2
+
+    FILE=$1
+    AGE=$2
+    CMD=$3
+
+    OLD=0
+    CONTENTS=""
+    if [ -e $FILE ]; then
+        OLD=$(find $FILE -mmin +$AGE -ls | wc -l)
+        CONTENTS=$(cat $FILE);
+    fi
+    if [ -z "$CONTENTS" ] || [ "$OLD" -gt 0 ]; then
+        echo "REBUILD"
+        CONTENTS=$(eval $CMD)
+        echo "$CONTENTS" > $FILE
+    fi
+    echo "$CONTENTS"
+}
+
+
 ZN_LIST=$(_cache_command /tmp/cached_znlistfull 2 "$ZNLISTFULL")
 SORTED_ZN_LIST=$(echo "$ZNLIST" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
 awk ' \
@@ -116,8 +116,6 @@ awk ' \
 }' |  sort -k10 -n)
 
 ZN_VISIBLE=$(echo "$SORTED_ZN_LIST" | grep $ZNADDR | wc -l)
-ZN_LASTPAID=$(echo "$SORTED_ZN_LIST" | grep $ZNADDR | awk '{print $7}')
-ZN_LASTPAID=$(date -d @${ZN_LASTPAID})
 ZN_QUEUE_LENGTH=$(echo "$SORTED_ZN_LIST" | wc -l)
 ZN_QUEUE_POSITION=$(echo "$SORTED_ZN_LIST" | grep -A9999999 $ZNADDR | wc -l)
 ZN_QUEUE_IN_SELECTION=$(( $ZN_QUEUE_POSITION <= $(( $ZN_QUEUE_LENGTH / 10 )) ))
@@ -125,8 +123,7 @@ ZN_QUEUE_IN_SELECTION=$(( $ZN_QUEUE_POSITION <= $(( $ZN_QUEUE_LENGTH / 10 )) ))
 echo ""
 echo "Zelnode :" $ZNADDR
 if [ $ZN_VISIBLE -gt 0 ]; then
-    echo "Lastpaid: $ZN_LASTPAID"
-    echo "Tier    : $ZNTIER"
+        echo "Tier    : $ZNTIER"
         echo "         -> queue position $ZN_QUEUE_POSITION/$ZN_QUEUE_LENGTH"
         echo ""
     if [ $ZN_QUEUE_IN_SELECTION -gt 0 ]; then
