@@ -94,7 +94,7 @@ function _cache_command(){
 ZNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
 ZNLISTCMD="`echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'${ZNTIER}'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
 ZN_LIST=$(_cache_command /tmp/cached_znlistfull 2 "$ZNLISTCMD")
-SORTED_ZN_LIST=$(echo "$ZNLISTCMD" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
+SORTED_ZN_LIST=$(echo "$ZNLIST" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
 awk ' \
 {
     if ($7 == 0) {
