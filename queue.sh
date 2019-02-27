@@ -1,10 +1,8 @@
 #!/bin/bash
 
-MNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
-MNLISTCMD="`echo "$MNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'BASIC'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
-MNLISTFULL=$(printf "%s" "$MNLISTCMD")
-
-#!/bin/bash
+#MNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
+#MNLISTCMD="`echo "$MNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'BASIC'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
+#MNLISTFULL=$(printf "%s" "$MNLISTCMD")
 
 ZNTIER=$1
 ZNADDR=$2
