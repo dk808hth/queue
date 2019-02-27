@@ -93,9 +93,8 @@ function _cache_command(){
 }
 
 
-
 ZN_LIST=$(_cache_command /tmp/cached_znlistfull 2 "$ZNLISTCMD")
-SORTED_ZN_LIST=$(echo "$ZNLISTCMD" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
+SORTED_ZN_LIST=$(echo "$ZNLIST" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
 awk ' \
 {
     if ($7 == 0) {
