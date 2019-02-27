@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#MNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
-#MNLISTCMD="`echo "$MNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'BASIC'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
-#MNLISTFULL=$(printf "%s" "/home/dk808test/.txt/cache")
-
 ZNTIER=$1
 ZNADDR=$2
 
@@ -70,12 +66,11 @@ if [ $ZNTIER == -BAMF ] ; then
     ZNTIER=BAMF
 fi
 
-touch /home/dk808test/.txt/cache
-> cache
-zelcash-cli listzelnodes |jq -r '[.[] |select(.tier=="BAMF") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add' > "/home/dk808test/.txt/cache"
-ZNLISTFULL=$(printf "%s" "/home/dk808test/.txt/cache")
+ZNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
+ZNLISTCMD="`echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'${ZNTIER}'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
 
-SORTED_ZN_LIST=$(echo "$ZNLISTFULL" | grep -w ENABLED | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
+
+SORTED_ZN_LIST=$(echo "$ZNLISTCMD" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
 awk ' \
 {
     if ($7 == 0) {
