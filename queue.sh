@@ -4,40 +4,79 @@ MNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
 MNLISTCMD="`echo "$MNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'BASIC'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
 MNLISTFULL=$(printf "%s" "$MNLISTCMD")
 
-MNADDR=$1
+#!/bin/bash
 
-if [ -z $MNADDR ]; then
-    echo "usage: $0 <masternode address>"
+ZNTIER=$1
+ZNADDR=$2
+
+GREEN='\033[1;32m'
+
+echo '                                                                      '
+echo -e '\033[1;34m                       #                       \033[0m   ' 
+echo -e '\033[1;34m                     #####                     \033[0m   ' 
+echo -e '\033[1;34m                   #########                   \033[0m   ' 
+echo '        __  ___            __   __   ___                              '
+echo '         / |__  |    |\ | /  \ |  \ |__                               '
+echo '        /_ |___ |___ | \| \__/ |__/ |___                              '
+echo '                                                                      '
+echo -e '\033[1;34m         #   #####################   #         \033[0m   ' 
+echo -e '\033[1;34m       #####   #################   #####       \033[0m   ' 
+echo -e '\033[1;34m     #########   #############   #########     \033[0m   ' 
+echo -e '\033[1;34m   #############   #########   #############   \033[0m   ' 
+echo -e '\033[1;34m #################  #######  ################# \033[0m   ' 
+echo -e '\033[1;34m #################  #######  ################# \033[0m   ' 
+echo -e '\033[1;34m #################  #######  ################# \033[0m   ' 
+echo -e '\033[1;34m #################   #####   ################# \033[0m   ' 
+echo -e '\033[1;34m #################     #     ################# \033[0m   ' 
+echo -e '\033[1;34m   #############               #############   \033[0m   ' 
+echo -e '\033[1;34m     #########                   #########     \033[0m   ' 
+echo -e '\033[1;34m       #####         V0.1          #####       \033[0m   ' 
+echo -e '\033[1;34m         #                           #         \033[0m   ' 
+echo '            __        ___       ___                                    '
+echo '           /  \ |  | |__  |  | |__                                     '
+echo '           \__X \__/ |___ \__/ |___                                    '
+
+if [ -z $ZNTIER ]; then
+    echo ""
+    echo "usage   : $0 <tier> <zelnode address>"
+    echo ""
+    echo "example : $0 -BASIC t1cUKkWws83twyvAbj6fWEAfsvp14JDjr87"
+    echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"
+    echo "example : $0 -BAMF t1MK2mtU8Wuoq22Z2FsMUMN41DsrGcFxcCo"
+    echo ""
     exit -1
 fi
 
-function _cache_command(){
 
-    # cache life in minutes
-    AGE=2
-
-    FILE=$1
-    AGE=$2
-    CMD=$3
-
-    OLD=0
-    CONTENTS=""
-    if [ -e $FILE ]; then
-        OLD=$(find $FILE -mmin +$AGE -ls | wc -l)
-        CONTENTS=$(cat $FILE);
-    fi
-    if [ -z "$CONTENTS" ] || [ "$OLD" -gt 0 ]; then
-        echo "REBUILD"
-        CONTENTS=$(eval $CMD)
-        echo "$CONTENTS" > $FILE
-    fi
-    echo "$CONTENTS"
-}
+if [ -z $ZNADDR ]; then
+    echo ""
+    echo "usage   : $0 <tier> <zelnode address>"
+    echo ""
+    echo "example : $0 -BASIC t1cUKkWws83twyvAbj6fWEAfsvp14JDjr87"
+    echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"
+    echo "example : $0 -BAMF t1MK2mtU8Wuoq22Z2FsMUMN41DsrGcFxcCo"
+    echo ""
+    exit -1
+fi
 
 
+if [ $ZNTIER == -BASIC ] ; then
+    ZNTIER=BASIC
+fi
 
-MN_LIST=$(_cache_command /tmp/cached_mnlistfull 2 "$MNLISTFULL")
-SORTED_MN_LIST=$(echo "$MN_LIST" | grep -w ENABLED | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
+if [ $ZNTIER == -SUPER ] ; then
+    ZNTIER=SUPER
+fi
+
+if [ $ZNTIER == -BAMF ] ; then
+    ZNTIER=BAMF
+fi
+
+ZNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
+ZNLISTCMD="`echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'${ZNTIER}'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
+
+
+SORTED_ZN_LIST=$(echo "$ZNLISTCMD" | grep -w ENABLED | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
 awk ' \
 {
     if ($7 == 0) {
@@ -56,17 +95,23 @@ awk ' \
     }
 }' |  sort -k10 -n)
 
-MN_VISIBLE=$(echo "$SORTED_MN_LIST" | grep $MNADDR | wc -l)
-MN_QUEUE_LENGTH=$(echo "$SORTED_MN_LIST" | wc -l)
-MN_QUEUE_POSITION=$(echo "$SORTED_MN_LIST" | grep -A9999999 $MNADDR | wc -l)
-MN_QUEUE_IN_SELECTION=$(( $MN_QUEUE_POSITION <= $(( $MN_QUEUE_LENGTH / 10 )) ))
+ZN_VISIBLE=$(echo "$SORTED_ZN_LIST" | grep $ZNADDR | wc -l)
+ZN_LASTPAID=$(echo "$SORTED_ZN_LIST" | grep $ZNADDR | awk '{print $7}')
+ZN_LASTPAID=$(date -d @${ZN_LASTPAID})
+ZN_QUEUE_LENGTH=$(echo "$SORTED_ZN_LIST" | wc -l)
+ZN_QUEUE_POSITION=$(echo "$SORTED_ZN_LIST" | grep -A9999999 $ZNADDR | wc -l)
+ZN_QUEUE_IN_SELECTION=$(( $ZN_QUEUE_POSITION <= $(( $ZN_QUEUE_LENGTH / 10 )) ))
 
-echo "masternode $MNADDR"
-if [ $MN_VISIBLE -gt 0 ]; then
-    echo " -> queue position $MN_QUEUE_POSITION/$MN_QUEUE_LENGTH"
-    if [ $MN_QUEUE_IN_SELECTION -gt 0 ]; then
+echo ""
+echo "Zelnode :" $ZNADDR
+if [ $ZN_VISIBLE -gt 0 ]; then
+    echo "Lastpaid: $ZN_LASTPAID"
+    echo "Tier    : $ZNTIER"
+        echo "         -> queue position $ZN_QUEUE_POSITION/$ZN_QUEUE_LENGTH"
+        echo ""
+    if [ $ZN_QUEUE_IN_SELECTION -gt 0 ]; then
         echo " -> SELECTION PENDING"
     fi
 else
-    echo "is not in masternode list"
+    echo "is not in Zelnode list"
 fi
