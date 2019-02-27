@@ -114,8 +114,6 @@ awk ' \
 }' |  sort -k10 -n)
 
 ZN_VISIBLE=$(echo "$SORTED_ZN_LIST" | grep $ZNADDR | wc -l)
-ZN_LASTPAID=$(echo "$SORTED_ZN_LIST" | grep $ZNADDR | awk '{print $7}')
-ZN_LASTPAID=$(date -d @${ZN_LASTPAID})
 ZN_QUEUE_LENGTH=$(echo "$SORTED_ZN_LIST" | wc -l)
 ZN_QUEUE_POSITION=$(echo "$SORTED_ZN_LIST" | grep -A9999999 $ZNADDR | wc -l)
 ZN_QUEUE_IN_SELECTION=$(( $ZN_QUEUE_POSITION <= $(( $ZN_QUEUE_LENGTH / 10 )) ))
