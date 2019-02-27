@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 MNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
