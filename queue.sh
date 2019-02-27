@@ -120,9 +120,8 @@ ZN_QUEUE_IN_SELECTION=$(( $ZN_QUEUE_POSITION <= $(( $ZN_QUEUE_LENGTH / 10 )) ))
 
 echo ""
 echo "Zelnode :" $ZNADDR
-if [ $ZN_VISIBLE -gt 0 ]; then
-    echo "Lastpaid: $ZN_LASTPAID"
-    echo "Tier    : $ZNTIER"
+if [ $ZN_VISIBLE -gt 0 ]; then  
+        echo "Tier    : $ZNTIER"
         echo "         -> queue position $ZN_QUEUE_POSITION/$ZN_QUEUE_LENGTH"
         echo ""
     if [ $ZN_QUEUE_IN_SELECTION -gt 0 ]; then
