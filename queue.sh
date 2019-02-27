@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MNLISTCMD_TMP=$(zelcash-cli listzelnodes 2>/dev/null)
-MNLISTCMD=$(jq -r '[.[] |select(.tier==BASIC) |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add' <<< $MNLISTCMD_TMP)
+MNLISTCMD=$(jq -r --arg tier ${ZNTIER} '[.[] |select(.tier=="BASIC") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add' <<< $MNLISTCMD_TMP)
 
 MNADDR=$1
 
