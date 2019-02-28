@@ -1,53 +1,5 @@
 #!/bin/bash
 
-ZNTIER=$1
-ZNADDR=$2
-
-
-echo '                                                                      '
-echo -e '\033[1;34m                       #                       \033[0m   ' 
-echo -e '\033[1;34m                     #####                     \033[0m   ' 
-echo -e '\033[1;34m                   #########                   \033[0m   ' 
-echo '        __  ___            __   __   ___                              '
-echo '         / |__  |    |\ | /  \ |  \ |__                               '
-echo '        /_ |___ |___ | \| \__/ |__/ |___                              '
-echo '                                                                      '
-echo -e '\033[1;34m         #   #####################   #         \033[0m   ' 
-echo -e '\033[1;34m       #####   #################   #####       \033[0m   ' 
-echo -e '\033[1;34m     #########   #############   #########     \033[0m   ' 
-echo -e '\033[1;34m   #############   #########   #############   \033[0m   ' 
-echo -e '\033[1;34m #################  #######  ################# \033[0m   ' 
-echo -e '\033[1;34m #################  #######  ################# \033[0m   ' 
-echo -e '\033[1;34m #################  #######  ################# \033[0m   ' 
-echo -e '\033[1;34m #################   #####   ################# \033[0m   ' 
-echo -e '\033[1;34m #################     #     ################# \033[0m   ' 
-echo -e '\033[1;34m   #############               #############   \033[0m   ' 
-echo -e '\033[1;34m     #########                   #########     \033[0m   ' 
-echo -e '\033[1;34m       #####         V0.1          #####       \033[0m   ' 
-echo -e '\033[1;34m         #                           #         \033[0m   ' 
-echo '            __        ___       ___                                    '
-echo '           /  \ |  | |__  |  | |__                                     '
-echo '           \__X \__/ |___ \__/ |___                                    '
-
-if [ -z "$ZNTIER" ]; then
-    echo ""
-    echo "usage   : $0 <tier> <zelnode address>"
-    echo ""
-    echo "example : $0 -BASIC t1cUKkWws83twyvAbj6fWEAfsvp14JDjr87"
-    echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"
-    echo "example : $0 -BAMF t1MK2mtU8Wuoq22Z2FsMUMN41DsrGcFxcCo"
-    echo ""
-    exit 1
-fi
-
-
-if [ -z "$ZNADDR" ]; then
-    echo ""
-    echo "usage   : $0 <tier> <zelnode address>"
-    echo ""
-    echo "example : $0 -BASIC t1cUKkWws83twyvAbj6fWEAfsvp14JDjr87"
-    echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"#!/bin/bash
-
 ZNLISTCMD_TMP=$(zelcash-cli listzelnodes 2>/dev/null)
 ZNLISTCMD=$(jq -r --arg tier "${ZNTIER}" '[.[] |select(.tier==$tier) |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add' <<< "$ZNLISTCMD_TMP")
 
@@ -142,7 +94,7 @@ function _cache_command(){
 
 ZN_LIST=$(_cache_command /tmp/cached_znlistfull 2 "$ZNLISTCMD")
 SORTED_ZN_LIST=$(echo "$ZNLISTCMD" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
-awk '
+awk ' \
 {
     if ($7 == 0) {
         TIME = $6
