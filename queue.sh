@@ -37,6 +37,7 @@ if [ -z "$ZNTIER" ]; then
     echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"
     echo "example : $0 -BAMF t1MK2mtU8Wuoq22Z2FsMUMN41DsrGcFxcCo"
     echo ""
+    exit 1
 fi
 
 
@@ -48,6 +49,7 @@ if [ -z "$ZNADDR" ]; then
     echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"
     echo "example : $0 -BAMF t1MK2mtU8Wuoq22Z2FsMUMN41DsrGcFxcCo"
     echo ""
+    exit 1
 fi
 
 
@@ -91,7 +93,7 @@ ZN_LASTPAID=$(echo "$SORTED_ZN_LIST" | grep "$ZNADDR" | awk '{print $7}')
 ZN_LASTPAID=$(date -d @"${ZN_LASTPAID}")
 ZN_QUEUE_LENGTH=$(echo "$SORTED_ZN_LIST" | wc -l)
 ZN_QUEUE_POSITION=$(echo "$SORTED_ZN_LIST" | grep -c -A9999999 "$ZNADDR")
-ZN_QUEUE_IN_SELECTION=$(( $ZN_QUEUE_POSITION <= $(( $ZN_QUEUE_LENGTH / 10 )) ))
+ZN_QUEUE_IN_SELECTION=$(( ZN_QUEUE_POSITION <= $(( ZN_QUEUE_LENGTH / 10 )) ))
 
 echo ""
 echo "Zelnode :" "$ZNADDR"
