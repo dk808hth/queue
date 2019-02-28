@@ -87,8 +87,8 @@ function _cache_command(){
     echo "$CONTENTS"
 }
 
-ZNLISTCMD_TMP=$(zelcash-cli listzelnodes 2>/dev/null)
-ZNLISTCMD=$(jq -r --arg tier "${ZNTIER}" '[.[] |select(.tier==$tier) |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add' <<< "$ZNLISTCMD_TMP")
+ZNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
+ZNLISTCMD="`echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'${ZNTIER}'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
 ZNLISTPAGE="$(printf %s\\n "$ZNLISTCMD" | wc -l)"
 
 ZN_LIST=$(_cache_command /tmp/cached_znlistfull 2 "$ZNLISTPAGE")
