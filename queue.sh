@@ -92,8 +92,8 @@ ZNLISTCMD="`echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'BAMF'") |{(.txh
 ZNLISTPAGE=`echo "$ZNLISTCMD"`
 ZNLIST=`echo "$ZNLISTPAGE"`
 
-ZN_LIST=`_cache_command /tmp/cached_znlistfull 2 "$ZNLIST"`
-SORTED_ZN_LIST=`echo "$ZNLIST" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
+ZN_LIST=$(_cache_command /tmp/cached_znlistfull 2 "$ZNLIST")
+SORTED_ZN_LIST=$(echo "$ZN_LIST" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
 awk ' \
 {
     if ($7 == 0) {
@@ -110,7 +110,7 @@ awk ' \
         }
         print $_ " " TIME
     }
-}' |  sort -k10 -n`
+}' |  sort -k10 -n)
 
 ZN_VISIBLE=$(echo "$SORTED_ZN_LIST" | grep -c "$ZNADDR")
 ZN_QUEUE_LENGTH=$(echo "$SORTED_ZN_LIST" | wc -l)
