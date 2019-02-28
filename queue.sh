@@ -216,7 +216,7 @@ awk ' \
         }
         print $_ " " TIME
     }
-}' |  sort -k10 -n)
+}' |  sort -k10 -n) \
 
 ZN_VISIBLE=$(echo "$SORTED_ZN_LIST" | grep -c "$ZNADDR")
 ZN_LASTPAID=$(echo "$SORTED_ZN_LIST" | grep "$ZNADDR" | awk '{print $7}')
