@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ZNTIER=$1
-ZNADDR=$2
+#ZNTIER=$1
+ZNADDR=$1
 
 echo '                                               '
 echo -e '\033[1;34m                       #                   \033[0m   ' 
@@ -28,41 +28,41 @@ echo '            __        ___       ___                                    '
 echo '           /  \ |  | |__  |  | |__                                     '
 echo '           \__X \__/ |___ \__/ |___                                    '
 
-if [ -z "$ZNTIER" ]; then
-    echo ""
-    echo "usage   : $0 <tier> <zelnode address>"
-    echo ""
-    echo "example : $0 -BASIC t1cUKkWws83twyvAbj6fWEAfsvp14JDjr87"
-    echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"
-    echo "example : $0 -BAMF t1MK2mtU8Wuoq22Z2FsMUMN41DsrGcFxcCo"
-    echo ""
-    exit 1
-fi
+#if [ -z "$ZNTIER" ]; then
+    #echo ""
+    #echo "usage   : $0 <tier> <zelnode address>"
+    #echo ""
+    #echo "example : $0 -BASIC t1cUKkWws83twyvAbj6fWEAfsvp14JDjr87"
+    #echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"
+    #echo "example : $0 -BAMF t1MK2mtU8Wuoq22Z2FsMUMN41DsrGcFxcCo"
+    #echo ""
+    #exit 1
+#fi
 
 
 if [ -z "$ZNADDR" ]; then
     echo ""
-    echo "usage   : $0 <tier> <zelnode address>"
-    echo ""
-    echo "example : $0 -BASIC t1cUKkWws83twyvAbj6fWEAfsvp14JDjr87"
-    echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"
-    echo "example : $0 -BAMF t1MK2mtU8Wuoq22Z2FsMUMN41DsrGcFxcCo"
-    echo ""
+    echo "usage   : $0 <zelnode address>"
+    #echo ""
+    #echo "example : $0 -BASIC t1cUKkWws83twyvAbj6fWEAfsvp14JDjr87"
+    #echo "example : $0 -SUPER t1U4mLtUuiSwfVFS8rHCY1nANXD5fweP911"
+    #echo "example : $0 -BAMF t1MK2mtU8Wuoq22Z2FsMUMN41DsrGcFxcCo"
+    #echo ""
     exit 1
 fi
 
 
-if [ "$ZNTIER" == -BASIC ] ; then
-    ZNTIER=BASIC
-fi
+#if [ "$ZNTIER" == -BASIC ] ; then
+    #ZNTIER=BASIC
+#fi
 
-if [ "$ZNTIER" == -SUPER ] ; then
-    ZNTIER=SUPER
-fi
+#if [ "$ZNTIER" == -SUPER ] ; then
+    #ZNTIER=SUPER
+#fi
 
-if [ "$ZNTIER" == -BAMF ] ; then
-    ZNTIER=BAMF
-fi
+#if [ "$ZNTIER" == -BAMF ] ; then
+    #ZNTIER=BAMF
+#fi
 
 function _cache_command(){
 
@@ -88,7 +88,7 @@ function _cache_command(){
 }
 
 ZNLISTCMD_TMP="`zelcash-cli listzelnodes 2>/dev/null`"
-ZNLISTCMD="`echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'${ZNTIER}'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
+ZNLISTCMD="`echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'BAMF'") |{(.txhash):(.status+" "+(.version|tostring)+" "+.addr+" "+(.lastseen|tostring)+" "+(.activetime|tostring)+" "+(.lastpaid|tostring)+" "+.ipaddress)}]|add'`"
 ZNLISTPAGE="$(printf %s\\n "$ZNLISTCMD" | wc -l)"
 
 ZN_LIST=$(_cache_command /tmp/cached_znlistfull 2 "$ZNLISTPAGE")
