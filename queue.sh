@@ -75,14 +75,14 @@ function _cache_command(){
 
     OLD=0
     CONTENTS=""
-    if [ -e "$FILE" ]; then
-        OLD=$(find "$FILE" -mmin +"$AGE" -ls | wc -l)
-        CONTENTS=$(cat "$FILE");
+    if [ -e $FILE ]; then
+        OLD=$(find $FILE -mmin +$AGE -ls | wc -l)
+        CONTENTS=$(cat $FILE);
     fi
     if [ -z "$CONTENTS" ] || [ "$OLD" -gt 0 ]; then
         echo "REBUILD"
-        CONTENTS=$(eval "$CMD")
-        echo "$CONTENTS" > "$FILE"
+        CONTENTS=$(eval $CMD)
+        echo "$CONTENTS" > $FILE
     fi
     echo "$CONTENTS"
 }
