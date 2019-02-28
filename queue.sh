@@ -68,7 +68,7 @@ ZNLISTCMD="$(echo "$ZNLISTCMD_TMP" | jq -r '[.[] |select(.tier=="'${ZNTIER}'") |
 
 
 SORTED_ZN_LIST=$(echo "$ZNLISTCMD" | sed -e 's/[}|{]//' -e 's/"//g' -e 's/,//g' | grep -v ^$ | \
-awk ' 
+awk ' \ 
 {
     if ($7 == 0) {
         TIME = $6
