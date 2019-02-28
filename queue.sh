@@ -91,7 +91,7 @@ ZN_LASTPAID=$(echo "$SORTED_ZN_LIST" | grep "$ZNADDR" | awk '{print $7}')
 ZN_LASTPAID=$(date -d @"${ZN_LASTPAID}")
 ZN_QUEUE_LENGTH=$(echo "$SORTED_ZN_LIST" | wc -l)
 ZN_QUEUE_POSITION=$(echo "$SORTED_ZN_LIST" | grep -c -A9999999 "$ZNADDR")
-ZN_QUEUE_IN_SELECTION=$(( ZN_QUEUE_POSITION <= $(( ZN_QUEUE_LENGTH / 10 )) ))
+ZN_QUEUE_IN_SELECTION=$(( $ZN_QUEUE_POSITION <= $(( $ZN_QUEUE_LENGTH / 10 )) ))
 
 echo ""
 echo "Zelnode :" "$ZNADDR"
